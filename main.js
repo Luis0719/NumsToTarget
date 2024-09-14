@@ -261,6 +261,7 @@ document.getElementById("btn-add").addEventListener("click", (e) => {
     .getElementById("nums-form-template")
     .cloneNode(/*deep=*/ true);
   newForm.id = "";
+  newForm.class = "nums-form";
   document.getElementById("forms-container").appendChild(newForm);
   SetChangeHandlers();
 });
