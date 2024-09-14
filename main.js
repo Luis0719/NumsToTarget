@@ -19,6 +19,12 @@ function ValuesFromCheckboxes(inputs, parser = (x) => x) {
     .filter((x) => x);
 }
 
+/**
+ * Description
+ * @param {[HTMLElement]} inputs
+ * @param {(string) => T} parser=(x
+ * @returns {T}
+ */
 function ValueFromRadio(inputs, parser = (x) => x) {
   for (const input of inputs) {
     if (input.checked) {
@@ -66,6 +72,7 @@ class Node {
 /**
  * Description
  * @param {Node} node
+ * @param {number} start
  * @param {number} target
  * @param {number} size
  * @param {[number]} exclude
@@ -80,6 +87,8 @@ function NodesTo(node, start, target, size, exclude) {
   }
   let added = false;
   for (let i = start + 1; i < 10; i++) {
+    if (exclude.includes(i)) continue;
+
     let tmpNode = new Node(i);
     if (NodesTo(tmpNode, i, target - i, size - 1, exclude)) {
       node.addChild(tmpNode);
