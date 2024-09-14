@@ -7,17 +7,49 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="row">
-      <b>Result:</b>
-      <div id="js-result"></div>
+    <div id="forms-container" class="flex-container">
+      <form id="" class="nums-form">
+        <div class="row">
+          <b>Result:</b>
+          <div class="js-result"></div>
+        </div>
+        <div class="js-size-inputs" class="row"><b>Size:</b></div>
+        <div class="js-target-input" class="row"><b>Target:</b></div>
+        <div class="js-exclude-inputs" class="row"><b>Exclude:</b></div>
+        <div class="js-exclude-group-inputs" class="row">
+          <b>Exclude pair:</b>
+        </div>
+      </form>
+      <form id="" class="nums-form">
+        <div class="row">
+          <b>Result:</b>
+          <div class="js-result"></div>
+        </div>
+        <div class="js-size-inputs" class="row"><b>Size:</b></div>
+        <div class="js-target-input" class="row"><b>Target:</b></div>
+        <div class="js-exclude-inputs" class="row"><b>Exclude:</b></div>
+        <div class="js-exclude-group-inputs" class="row">
+          <b>Exclude pair:</b>
+        </div>
+      </form>
     </div>
-    <div id="js-size-inputs" class="row"><b>Size:</b></div>
-    <div id="js-target-input" class="row"><b>Target:</b></div>
-    <div id="js-exclude-inputs" class="row"><b>Exclude:</b></div>
-    <div id="js-exclude-group-inputs" class="row">
-      <b>Exclude pair:</b>
-    </div>
+    <button id="btn-add">Add</button>
+    <button id="btn-remove">Remove Last</button>
 
+    <div class="hide">
+      <form id="nums-form-template" class="nums-form">
+        <div class="row">
+          <b>Result:</b>
+          <div class="js-result"></div>
+        </div>
+        <div class="js-size-inputs" class="row"><b>Size:</b></div>
+        <div class="js-target-input" class="row"><b>Target:</b></div>
+        <div class="js-exclude-inputs" class="row"><b>Exclude:</b></div>
+        <div class="js-exclude-group-inputs" class="row">
+          <b>Exclude pair:</b>
+        </div>
+      </form>
+    </div>
     <script src="./html_components.js"></script>
     <script src="./renderer.js"></script>
     <script src="./main.js"></script>

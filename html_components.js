@@ -11,32 +11,11 @@ function AppendToId(id, child) {
 /**
  * Append child to all elements with className.
  * @param {string} className
- * @param {HTMLElement} child
+ * @param {() => HTMLElement} childCreatorFn
  */
-function AppendToClassName(className, child) {
-  for (let root of document.getElementsByClassName(className)) {
-    root.appendChild(child);
-  }
-}
-
-/**
- * Appends child to given element.
- * @param {string} id=""
- * @param {string} className=""
- * @param {HTMLElement} child}
- */
-function AppendTo({ id = "", className = "", child }) {
-  if (id) {
-    AppendToId(id, child);
-  }
-  if (className) {
-    AppendToClassName(className, child);
-  }
-}
-
-function AppendMultipleTo({ id = "", className = "", children }) {
-  for (const child of children) {
-    AppendTo({ id, className, child });
+function AppendToClassName(className, childCreatorFn, root = document) {
+  for (let container of root.getElementsByClassName(className)) {
+    container.appendChild(childCreatorFn());
   }
 }
 

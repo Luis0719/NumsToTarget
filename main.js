@@ -1,8 +1,3 @@
-const targetInput = document.getElementsByName("i-target");
-const sizeInputs = document.getElementsByName("i-size");
-const excludeInputs = document.getElementsByName("i-exclude");
-const excludeGroupInputs = document.getElementsByName("i-exclude-group");
-
 function ToInt(x) {
   return +x;
 }
@@ -123,18 +118,34 @@ function Traverse(node, results, block = [], exclude_group, found_in_group) {
   });
 }
 
-function CalculateResults() {
-  const size = ValueFromRadio(sizeInputs, ToInt);
-  const target = +targetInput[0].value;
-  const exclude = ValuesFromCheckboxes(excludeInputs, ToInt);
-  const excludeGroup = ValuesFromCheckboxes(excludeGroupInputs, ToInt);
+/**
+ * Description
+ * @param {FormData} form
+ * @returns {[number]}
+ */
+function CalculateResultsFor(form) {
+  const size = +form.get("i-size");
+  const target = +form.get("i-target");
+  const exclude = form.getAll("i-exclude").map(ToInt);
+  const excludeGroup = form.getAll("i-exclude-group").map(ToInt);
 
   const root = new Node(0);
   NodesTo(root, /*start=*/ 0, target, size, exclude);
   const results = [];
   Traverse(root, results, [], excludeGroup, false);
+  return results;
+}
 
-  const resultDiv = document.getElementById("js-result");
+/**
+ * Description
+ * @param {Event} e
+ */
+function CalculateResults(e) {
+  console.log("in");
+  const form = e.target.closest(".nums-form");
+  const results = CalculateResultsFor(new FormData(form));
+
+  const resultDiv = form.getElementsByClassName("js-result")[0];
   resultDiv.innerHTML = "";
   results.forEach((result) => {
     const div = document.createElement("div");
@@ -172,22 +183,56 @@ function GetMaxPossible(size) {
   return [...Array(size).keys()].reduce((sum, next) => sum + (9 - next), 0);
 }
 
+/**
+ * Description
+ * @param {Event} e
+ */
 function HandleSizeChange(e) {
   const value = +e.target.value;
   const min = GetMinPossible(value);
   const max = GetMaxPossible(value);
-  targetInput[0].setAttribute("min", min);
-  targetInput[0].setAttribute("max", max);
-  if (targetInput[0].value < min) {
-    targetInput[0].value = min;
+  const targetInput = e.target
+    .closest(".nums-form")
+    .querySelector('input[name="i-target"]');
+  targetInput.setAttribute("min", min);
+  targetInput.setAttribute("max", max);
+  if (targetInput.value < min) {
+    targetInput.value = min;
   }
-  if (targetInput[0].value > max) {
-    targetInput[0].value = max;
+  if (targetInput.value > max) {
+    targetInput.value = max;
   }
 
-  CalculateResults();
+  CalculateResults(e);
 }
-SetChangeHandler(targetInput, CalculateResults);
-SetChangeHandler(sizeInputs, HandleSizeChange);
-SetChangeHandler(excludeInputs, CalculateResults);
-SetChangeHandler(excludeGroupInputs, CalculateResults);
+
+function SetChangeHandlers() {
+  SetChangeHandler(document.getElementsByName("i-target"), CalculateResults);
+  SetChangeHandler(document.getElementsByName("i-size"), HandleSizeChange);
+  SetChangeHandler(document.getElementsByName("i-exclude"), CalculateResults);
+  SetChangeHandler(
+    document.getElementsByName("i-exclude-group"),
+    CalculateResults
+  );
+}
+SetChangeHandlers();
+
+// Disable form submit
+const forms = document.getElementsByClassName("nums-form");
+for (const form of forms) {
+  form.addEventListener("submit", (e) => e.preventDefault());
+}
+
+document.getElementById("btn-add").addEventListener("click", (e) => {
+  const newForm = document
+    .getElementById("nums-form-template")
+    .cloneNode(/*deep=*/ true);
+  newForm.id = "";
+  document.getElementById("forms-container").appendChild(newForm);
+  SetChangeHandlers();
+});
+
+document.getElementById("btn-remove").addEventListener("click", (e) => {
+  const forms = document.getElementsByClassName("nums-form");
+  forms[forms.length - 1].remove();
+});

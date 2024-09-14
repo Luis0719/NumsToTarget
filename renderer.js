@@ -1,13 +1,12 @@
 function CreateTargetInput() {
-  AppendTo({
-    id: "js-target-input",
-    child: CreateNumberInput({
+  AppendToClassName("js-target-input", () =>
+    CreateNumberInput({
       name: "i-target",
       min: 3,
       max: 17,
       value: 3,
-    }),
-  });
+    })
+  );
 }
 CreateTargetInput();
 
@@ -30,35 +29,32 @@ function CheckedIfFirst(option, index) {
 }
 
 function CreateExcludeOptions() {
-  AppendTo({
-    id: "js-exclude-inputs",
-    child: CreateCheckboxList(
+  AppendToClassName("js-exclude-inputs", () =>
+    CreateCheckboxList(
       { name: "i-exclude" },
       IncrementNumbersInputData("i-exclude", 9)
-    ),
-  });
+    )
+  );
 }
 CreateExcludeOptions();
 
 function CreateExcludeGroupOptions() {
-  AppendTo({
-    id: "js-exclude-group-inputs",
-    child: CreateCheckboxList(
+  AppendToClassName("js-exclude-group-inputs", () =>
+    CreateCheckboxList(
       { name: "i-exclude-group" },
       IncrementNumbersInputData("i-exclude-group", 9)
-    ),
-  });
+    )
+  );
 }
 CreateExcludeGroupOptions();
 
 function CreateSizeOptions() {
-  AppendTo({
-    id: "js-size-inputs",
-    child: CreateRadioList(
+  AppendToClassName("js-size-inputs", () =>
+    CreateRadioList(
       { name: "i-size" },
       IncrementNumbersInputData("i-size", /*size=*/ 5, /*start=*/ 2),
       CheckedIfFirst
-    ),
-  });
+    )
+  );
 }
 CreateSizeOptions();
