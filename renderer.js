@@ -48,6 +48,16 @@ function CreateExcludeGroupOptions() {
 }
 CreateExcludeGroupOptions();
 
+function CreateMustIncludeOptions() {
+  AppendToClassName("js-must-include-inputs", () =>
+    CreateCheckboxList(
+      { name: "i-include" },
+      IncrementNumbersInputData("i-include", 9)
+    )
+  );
+}
+CreateMustIncludeOptions();
+
 function CreateSizeOptions() {
   AppendToClassName("js-size-inputs", () =>
     CreateRadioList(

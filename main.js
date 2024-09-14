@@ -99,22 +99,45 @@ function NodesTo(node, start, target, size, exclude) {
  * @param {Array(Array(number))} results
  * @param {Array(number)} block
  * @param {Array(number)} exclude_group reject solution if 2 numbers are found in this group.
- * @param {boolean} found_in_group
+ * @param {boolean} found_exclude_group
+ * @param {Array(number)} includes At list of of this must be present in the group.
+ * @param {boolean} found_includes Checks if we already found at least one of the includes.
  */
-function Traverse(node, results, block = [], exclude_group, found_in_group) {
+function Traverse(
+  node,
+  results,
+  block = [],
+  exclude_group,
+  found_exclude_group,
+  includes,
+  found_includes
+) {
   if (node.value !== 0) {
     block.push(node.value);
   }
   if (exclude_group.includes(node.value)) {
-    if (found_in_group) return; // We had already found 1! This is invalid.
-    found_in_group = true;
+    if (found_exclude_group) return; // We had already found 1! This is invalid.
+    found_exclude_group = true;
+  }
+  if (includes.includes(node.value)) {
+    found_includes = true;
   }
   if (node.children.length === 0) {
-    results.push(block);
+    if (found_includes) {
+      results.push(block);
+    }
     return;
   }
   node.children.forEach((child) => {
-    Traverse(child, results, [...block], exclude_group, found_in_group);
+    Traverse(
+      child,
+      results,
+      [...block],
+      exclude_group,
+      found_exclude_group,
+      includes,
+      found_includes
+    );
   });
 }
 
@@ -128,11 +151,21 @@ function CalculateResultsFor(form) {
   const target = +form.get("i-target");
   const exclude = form.getAll("i-exclude").map(ToInt);
   const excludeGroup = form.getAll("i-exclude-group").map(ToInt);
+  const includes = form.getAll("i-include").map(ToInt);
 
   const root = new Node(0);
   NodesTo(root, /*start=*/ 0, target, size, exclude);
   const results = [];
-  Traverse(root, results, [], excludeGroup, false);
+  Traverse(
+    root,
+    results,
+    [],
+    excludeGroup,
+    /*found_exclude_group=*/ false,
+    includes,
+    // if includes is empty, we don't care about includes, so we set default to true.
+    /*found_includes=*/ includes.length === 0
+  );
   return results;
 }
 
@@ -230,6 +263,9 @@ function HandleResetClick(e) {
     .querySelectorAll('input[name="i-exclude"]')
     .forEach((x) => (x.checked = false));
   form
+    .querySelectorAll('input[name="i-include"]')
+    .forEach((x) => (x.checked = false));
+  form
     .querySelectorAll('input[name="i-exclude-group"]')
     .forEach((x) => (x.checked = false));
   CalculateResults(e);
@@ -239,6 +275,7 @@ function SetChangeHandlers() {
   SetChangeHandler(document.getElementsByName("i-target"), CalculateResults);
   SetChangeHandler(document.getElementsByName("i-size"), HandleSizeChange);
   SetChangeHandler(document.getElementsByName("i-exclude"), CalculateResults);
+  SetChangeHandler(document.getElementsByName("i-include"), CalculateResults);
   SetChangeHandler(
     document.getElementsByName("i-exclude-group"),
     CalculateResults
