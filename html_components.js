@@ -93,3 +93,17 @@ function CreateRadioList(attrs, options, checkedFn = (option, index) => false) {
   });
   return container;
 }
+
+/**
+ * Description
+ * @param {string} id
+ * @param {Map<string, string>} attrs={}
+ * @returns {HTMLElement}
+ */
+function CopyElement(id, attrs = {}) {
+  const newForm = document.getElementById(id).cloneNode(/*deep=*/ true);
+  for (const [key, value] of Object.entries(attrs)) {
+    newForm[key] = value;
+  }
+  return newForm;
+}

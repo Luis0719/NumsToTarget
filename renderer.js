@@ -68,3 +68,23 @@ function CreateSizeOptions() {
   );
 }
 CreateSizeOptions();
+
+/**
+ * Description
+ */
+function AddNumsForm() {
+  document.getElementById("forms-container").appendChild(
+    CopyElement(/*id=*/ "nums-form-template", {
+      id: "",
+      className: "nums-form",
+    })
+  );
+}
+
+/**
+ * Description
+ * @param {HTMLElement} form
+ */
+function RemoveNumsForm(form) {
+  document.getElementById("forms-container").removeChild(form);
+}

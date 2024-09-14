@@ -299,24 +299,17 @@ function SetChangeHandlers() {
 }
 SetChangeHandlers();
 
-// Disable form submit
-const forms = document.getElementsByClassName("nums-form");
-for (const form of forms) {
-  form.addEventListener("submit", (e) => e.preventDefault());
-}
+// Prevent redirects when hitting submit.
+SetEventHandler(document.getElementsByClassName("nums-form"), "submit", (e) =>
+  e.preventDefault()
+);
 
-document.getElementById("btn-add").addEventListener("click", (e) => {
-  const newForm = document
-    .getElementById("nums-form-template")
-    .cloneNode(/*deep=*/ true);
-  newForm.id = "";
-  newForm.className = "nums-form";
-  document.getElementById("forms-container").appendChild(newForm);
+SetClickHandler([document.getElementById("btn-add")], () => {
+  AddNumsForm();
   SetChangeHandlers();
 });
 
-document.getElementById("btn-remove").addEventListener("click", (e) => {
+SetClickHandler([document.getElementById("btn-remove")], () => {
   const forms = document.getElementsByClassName("nums-form");
-  const container = document.getElementById("forms-container");
-  container.removeChild(forms[forms.length - 1]);
+  RemoveNumsForm(forms[forms.length - 1]);
 });
