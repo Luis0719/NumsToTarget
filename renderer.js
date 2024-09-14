@@ -1,7 +1,12 @@
 function CreateTargetInput() {
   AppendTo({
     id: "js-target-input",
-    child: CreateNumberInput({ name: "i-target", min: 3, max: 17, value: 3 }),
+    child: CreateNumberInput({
+      name: "i-target",
+      min: 3,
+      max: 17,
+      value: 3,
+    }),
   });
 }
 CreateTargetInput();
@@ -28,7 +33,7 @@ function CreateExcludeOptions() {
   AppendTo({
     id: "js-exclude-inputs",
     child: CreateCheckboxList(
-      "i-exclude",
+      { name: "i-exclude" },
       IncrementNumbersInputData("i-exclude", 9)
     ),
   });
@@ -39,7 +44,7 @@ function CreateExcludeGroupOptions() {
   AppendTo({
     id: "js-exclude-group-inputs",
     child: CreateCheckboxList(
-      "i-exclude-group",
+      { name: "i-exclude-group" },
       IncrementNumbersInputData("i-exclude-group", 9)
     ),
   });
@@ -50,7 +55,7 @@ function CreateSizeOptions() {
   AppendTo({
     id: "js-size-inputs",
     child: CreateRadioList(
-      "i-size",
+      { name: "i-size" },
       IncrementNumbersInputData("i-size", /*size=*/ 5, /*start=*/ 2),
       CheckedIfFirst
     ),

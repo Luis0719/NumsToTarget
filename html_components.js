@@ -55,22 +55,38 @@ function CreateNumberInput(opts = {}) {
   return input;
 }
 
-function CreateCheckboxList(name, options) {
-  const container = document.createElement("div");
-  options.forEach((option) => {
-    if (!option.id || !option.value) {
-      throw Error("Box is missing id or value " + JSON.stringify(option));
-    }
-    const input = document.createElement("input", { id: option.id });
-    input.type = "checkbox";
-    input.name = name;
-    for (const [key, value] of Object.entries(option)) {
+function CreateInputWithLabel(
+  inputName,
+  inputType,
+  attrs,
+  configInputFn = (x) => {}
+) {
+  if (!attrs.id || !attrs.value) {
+    throw Error("Box is missing id or value " + JSON.stringify(attrs));
+  }
+  const input = document.createElement("input");
+  input.id = attrs.id;
+  input.type = inputType;
+  input.name = inputName;
+  input.value = attrs.value;
+  if (attrs.attrs) {
+    for (const [key, value] of Object.entries(attrs.attrs)) {
       input.setAttribute(key, value);
     }
+  }
+  configInputFn(input);
 
-    const label = document.createElement("label");
-    label.setAttribute("for", option.id);
-    label.innerText = option.value;
+  const label = document.createElement("label");
+  label.setAttribute("for", attrs.id);
+  label.innerText = attrs.value;
+  return [input, label];
+}
+
+function CreateCheckboxList(attrs, options) {
+  const container = document.createElement("div");
+  container.className = attrs.className || "";
+  options.forEach((option) => {
+    const [input, label] = CreateInputWithLabel(attrs.name, "checkbox", option);
 
     container.appendChild(input);
     container.appendChild(label);
@@ -78,25 +94,20 @@ function CreateCheckboxList(name, options) {
   return container;
 }
 
-function CreateRadioList(name, options, checked_fn = (option, index) => false) {
+function CreateRadioList(attrs, options, checkedFn = (option, index) => false) {
   const container = document.createElement("div");
+  container.className = attrs.className || "";
   options.forEach((option, index) => {
-    if (!option.id || !option.value) {
-      throw Error("Box is missing id or value " + JSON.stringify(option));
-    }
-    const input = document.createElement("input", { id: option.id });
-    input.type = "radio";
-    input.name = name;
-    for (const [key, value] of Object.entries(option)) {
-      input.setAttribute(key, value);
-    }
-    if (checked_fn(option, index)) {
-      input.checked = true;
-    }
-
-    const label = document.createElement("label");
-    label.setAttribute("for", option.id);
-    label.innerText = option.value;
+    const [input, label] = CreateInputWithLabel(
+      attrs.name,
+      "radio",
+      option,
+      (x) => {
+        if (checkedFn(option, index)) {
+          x.checked = true;
+        }
+      }
+    );
 
     container.appendChild(input);
     container.appendChild(label);
