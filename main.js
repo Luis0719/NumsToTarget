@@ -163,7 +163,7 @@ function CalculateResultsFor(form) {
     excludeGroup,
     /*found_exclude_group=*/ false,
     includes,
-    // if includes is empty, we don't care about includes, so we set default to true.
+    // if includes is empty, we don't care about includes, so we set default to true. ̰
     /*found_includes=*/ includes.length === 0
   );
   return results;
@@ -238,6 +238,18 @@ function GetMaxPossible(size) {
  * Description
  * @param {Event} e
  */
+function HandleInputChange(e) {
+  e.target
+    .closest(".nums-form")
+    .querySelector('input[name="i-target"]')
+    .focus();
+  CalculateResults(e);
+}
+
+/**
+ * Description
+ * @param {Event} e
+ */
 function HandleSizeChange(e) {
   const value = +e.target.value;
   const min = GetMinPossible(value);
@@ -254,7 +266,7 @@ function HandleSizeChange(e) {
     targetInput.value = max;
   }
 
-  CalculateResults(e);
+  HandleInputChange(e);
 }
 
 function HandleResetClick(e) {
@@ -268,17 +280,17 @@ function HandleResetClick(e) {
   form
     .querySelectorAll('input[name="i-exclude-group"]')
     .forEach((x) => (x.checked = false));
-  CalculateResults(e);
+  HandleInputChange(e);
 }
 
 function SetChangeHandlers() {
-  SetChangeHandler(document.getElementsByName("i-target"), CalculateResults);
+  SetChangeHandler(document.getElementsByName("i-target"), HandleInputChange);
   SetChangeHandler(document.getElementsByName("i-size"), HandleSizeChange);
-  SetChangeHandler(document.getElementsByName("i-exclude"), CalculateResults);
-  SetChangeHandler(document.getElementsByName("i-include"), CalculateResults);
+  SetChangeHandler(document.getElementsByName("i-exclude"), HandleInputChange);
+  SetChangeHandler(document.getElementsByName("i-include"), HandleInputChange);
   SetChangeHandler(
     document.getElementsByName("i-exclude-group"),
-    CalculateResults
+    HandleInputChange
   );
   SetClickHandler(
     document.getElementsByClassName("btn-reset"),
