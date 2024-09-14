@@ -261,12 +261,13 @@ document.getElementById("btn-add").addEventListener("click", (e) => {
     .getElementById("nums-form-template")
     .cloneNode(/*deep=*/ true);
   newForm.id = "";
-  newForm.class = "nums-form";
+  newForm.className = "nums-form";
   document.getElementById("forms-container").appendChild(newForm);
   SetChangeHandlers();
 });
 
 document.getElementById("btn-remove").addEventListener("click", (e) => {
   const forms = document.getElementsByClassName("nums-form");
-  forms[forms.length - 1].remove();
+  const container = document.getElementById("forms-container");
+  container.removeChild(forms[forms.length - 1]);
 });
