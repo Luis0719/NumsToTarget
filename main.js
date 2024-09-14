@@ -141,7 +141,6 @@ function CalculateResultsFor(form) {
  * @param {Event} e
  */
 function CalculateResults(e) {
-  console.log("in");
   const form = e.target.closest(".nums-form");
   const results = CalculateResultsFor(new FormData(form));
 
@@ -157,12 +156,31 @@ function CalculateResults(e) {
 /**
  * Description
  * @param {[HTMLElement]} inputs
+ * @param {string} event
+ * @param {() => undefined} handler
+ */
+function SetEventHandler(inputs, event, handler) {
+  for (const input of inputs) {
+    input.addEventListener(event, handler);
+  }
+}
+
+/**
+ * Description
+ * @param {[HTMLElement]} inputs
  * @param {() => undefined} handler
  */
 function SetChangeHandler(inputs, handler) {
-  for (const input of inputs) {
-    input.addEventListener("change", handler);
-  }
+  SetEventHandler(inputs, "change", handler);
+}
+
+/**
+ * Description
+ * @param {[HTMLElement]} inputs
+ * @param {() => undefined} handler
+ */
+function SetClickHandler(inputs, handler) {
+  SetEventHandler(inputs, "click", handler);
 }
 
 /**
@@ -206,6 +224,17 @@ function HandleSizeChange(e) {
   CalculateResults(e);
 }
 
+function HandleResetClick(e) {
+  const form = e.target.closest(".nums-form");
+  form
+    .querySelectorAll('input[name="i-exclude"]')
+    .forEach((x) => (x.checked = false));
+  form
+    .querySelectorAll('input[name="i-exclude-group"]')
+    .forEach((x) => (x.checked = false));
+  CalculateResults(e);
+}
+
 function SetChangeHandlers() {
   SetChangeHandler(document.getElementsByName("i-target"), CalculateResults);
   SetChangeHandler(document.getElementsByName("i-size"), HandleSizeChange);
@@ -213,6 +242,10 @@ function SetChangeHandlers() {
   SetChangeHandler(
     document.getElementsByName("i-exclude-group"),
     CalculateResults
+  );
+  SetClickHandler(
+    document.getElementsByClassName("btn-reset"),
+    HandleResetClick
   );
 }
 SetChangeHandlers();
